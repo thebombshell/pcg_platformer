@@ -1,0 +1,18 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+void fragment() {
+	
+	vec4 sampler_color = texture(TEXTURE, UV);
+	if (sampler_color.r + sampler_color.g + sampler_color.b < 0.01) {
+		
+		discard;
+	}
+}
+"
+_sections_unfolded = [ "Resource" ]
+
