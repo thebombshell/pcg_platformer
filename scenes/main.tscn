@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://default_env.tres" type="Environment" id=1]
 [ext_resource path="res://objects/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scripts/Content Generator.gd" type="Script" id=3]
+[ext_resource path="res://assets/theme/ui_theme.tres" type="Theme" id=4]
+[ext_resource path="res://scripts/Label Switch.gd" type="Script" id=5]
 
 [node name="Scene Node" type="Node"]
 
@@ -66,6 +68,8 @@ rect_clip_content = false
 mouse_filter = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
+theme = ExtResource( 4 )
+_sections_unfolded = [ "Theme" ]
 
 [node name="Panel" type="Panel" parent="GUI/Content Generator UI"]
 
@@ -73,9 +77,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 240.0
-margin_bottom = 240.0
-rect_scale = Vector2( 0.25, 0.25 )
+margin_right = 128.0
+margin_bottom = 64.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -83,38 +86,169 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 _sections_unfolded = [ "Rect" ]
 
-[node name="Label" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="PCG Options" type="Label" parent="GUI/Content Generator UI/Panel"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 40.0
-margin_bottom = 14.0
+margin_right = 128.0
+margin_bottom = 8.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 size_flags_horizontal = 1
 size_flags_vertical = 4
-text = "Content Generator Controls"
+text = "PCG Options"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
 
-[node name="HSeparator" type="HSeparator" parent="GUI/Content Generator UI/Panel"]
+[node name="Separator" type="Label" parent="GUI/Content Generator UI/Panel"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 56.0
-margin_bottom = 20.0
+margin_top = 8.0
+margin_right = 128.0
+margin_bottom = 16.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
-mouse_filter = 0
+mouse_filter = 2
 size_flags_horizontal = 1
-size_flags_vertical = 1
+size_flags_vertical = 4
+text = " ____"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Option A" type="Label" parent="GUI/Content Generator UI/Panel"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 16.0
+margin_right = 128.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Option A"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script = ExtResource( 5 )
+_sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
+
+[node name="Option B" type="Label" parent="GUI/Content Generator UI/Panel"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 24.0
+margin_right = 128.0
+margin_bottom = 32.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Option B"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script = ExtResource( 5 )
+_sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
+
+[node name="Option C" type="Label" parent="GUI/Content Generator UI/Panel"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 32.0
+margin_right = 128.0
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Option C"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script = ExtResource( 5 )
+_sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
+
+[node name="Option D" type="Label" parent="GUI/Content Generator UI/Panel"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 40.0
+margin_right = 128.0
+margin_bottom = 48.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Option D"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script = ExtResource( 5 )
+_sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
+
+[node name="Option E" type="Label" parent="GUI/Content Generator UI/Panel"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 48.0
+margin_right = 128.0
+margin_bottom = 56.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Option E"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script = ExtResource( 5 )
+_sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
+
+[node name="Option F" type="Label" parent="GUI/Content Generator UI/Panel"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 56.0
+margin_right = 128.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Option F"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script = ExtResource( 5 )
+_sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
 
 

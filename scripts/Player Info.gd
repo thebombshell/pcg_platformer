@@ -3,7 +3,7 @@ extends Object
 const acceleration = 240.0;
 const decceleration = 240.0;
 const max_speed = 80.0;
-const jump_strength = 80.0;
+const jump_strength = 96.0;
 const death_height = 128.0;
 enum PLAYER_STATE {
 	

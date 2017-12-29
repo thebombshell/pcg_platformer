@@ -137,6 +137,7 @@ func _ready():
 func _process(t_delta):
 	
 	process_animation(t_delta);
+	camera.align();
 	if position.y > info.get_death_height():
 		
 		kill();
@@ -147,5 +148,4 @@ func _physics_process(t_delta):
 	
 	process_on_ground();
 	process_user_input(t_delta);
-	camera.align();
 	return;
