@@ -1,15 +1,14 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://scripts/Platform.gd" type="Script" id=1]
+[ext_resource path="res://scripts/Moving Platform.gd" type="Script" id=1]
 
-[node name="Platform" type="KinematicBody2D"]
+[node name="Moving Platform" type="KinematicBody2D" index="0"]
 
 input_pickable = false
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
-h_size = 1
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." index="0"]
 

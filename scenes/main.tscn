@@ -1,37 +1,38 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://default_env.tres" type="Environment" id=1]
 [ext_resource path="res://objects/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scripts/Content Generator.gd" type="Script" id=3]
 [ext_resource path="res://assets/theme/ui_theme.tres" type="Theme" id=4]
 [ext_resource path="res://scripts/Label Switch.gd" type="Script" id=5]
+[ext_resource path="res://scripts/Reset Button.gd" type="Script" id=6]
 
 [node name="Scene Node" type="Node"]
 
 _sections_unfolded = [ "Pause" ]
 
-[node name="Info" type="Node" parent="."]
+[node name="Info" type="Node" parent="." index="0"]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Info"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Info" index="0"]
 
 environment = ExtResource( 1 )
 
-[node name="ResourcePreloader" type="ResourcePreloader" parent="Info"]
+[node name="ResourcePreloader" type="ResourcePreloader" parent="Info" index="1"]
 
 resources = [ PoolStringArray(  ), [  ] ]
 _sections_unfolded = [ "Pause" ]
 
-[node name="Contents" type="Node" parent="."]
+[node name="Contents" type="Node" parent="." index="1"]
 
-[node name="Player" parent="Contents" instance=ExtResource( 2 )]
+[node name="Player" parent="Contents" index="0" instance=ExtResource( 2 )]
 
 position = Vector2( 0, -32 )
 
-[node name="Content Generator" type="Node2D" parent="Contents"]
+[node name="Content Generator" type="Node2D" parent="Contents" index="1"]
 
 script = ExtResource( 3 )
 
-[node name="Start Marker" type="Polygon2D" parent="Contents"]
+[node name="Start Marker" type="Polygon2D" parent="Contents" index="2"]
 
 z = -2
 polygon = PoolVector2Array( -8, -128, 8, -128, 8, 128, -8, 128 )
@@ -48,14 +49,14 @@ invert_enable = false
 invert_border = 100.0
 _sections_unfolded = [ "Z" ]
 
-[node name="GUI" type="CanvasLayer" parent="."]
+[node name="GUI" type="CanvasLayer" parent="." index="2"]
 
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
 
-[node name="Content Generator UI" type="Control" parent="GUI"]
+[node name="Content Generator UI" type="Control" parent="GUI" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -64,14 +65,13 @@ anchor_bottom = 0.0
 margin_right = 40.0
 margin_bottom = 40.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 theme = ExtResource( 4 )
 _sections_unfolded = [ "Theme" ]
 
-[node name="Panel" type="Panel" parent="GUI/Content Generator UI"]
+[node name="Panel" type="Panel" parent="GUI/Content Generator UI" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -80,13 +80,12 @@ anchor_bottom = 0.0
 margin_right = 128.0
 margin_bottom = 64.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 _sections_unfolded = [ "Rect" ]
 
-[node name="PCG Options" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="PCG Options" type="Label" parent="GUI/Content Generator UI/Panel" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -95,7 +94,6 @@ anchor_bottom = 0.0
 margin_right = 128.0
 margin_bottom = 8.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 2
 size_flags_horizontal = 1
 size_flags_vertical = 4
@@ -105,7 +103,7 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Rect" ]
 
-[node name="Separator" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="Separator" type="Label" parent="GUI/Content Generator UI/Panel" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -115,7 +113,6 @@ margin_top = 8.0
 margin_right = 128.0
 margin_bottom = 16.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 2
 size_flags_horizontal = 1
 size_flags_vertical = 4
@@ -125,7 +122,7 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Rect" ]
 
-[node name="Option A" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="Random Variation" type="Label" parent="GUI/Content Generator UI/Panel" index="2"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -135,18 +132,17 @@ margin_top = 16.0
 margin_right = 128.0
 margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 1
 size_flags_horizontal = 1
 size_flags_vertical = 4
-text = "Option A"
+text = "Random Variation"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 script = ExtResource( 5 )
 _sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
 
-[node name="Option B" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="Hazard Variation" type="Label" parent="GUI/Content Generator UI/Panel" index="3"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -156,18 +152,17 @@ margin_top = 24.0
 margin_right = 128.0
 margin_bottom = 32.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 1
 size_flags_horizontal = 1
 size_flags_vertical = 4
-text = "Option B"
+text = "Hazard Variation"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 script = ExtResource( 5 )
 _sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
 
-[node name="Option C" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="Difficulty Scaling" type="Label" parent="GUI/Content Generator UI/Panel" index="4"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -177,18 +172,17 @@ margin_top = 32.0
 margin_right = 128.0
 margin_bottom = 40.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 1
 size_flags_horizontal = 1
 size_flags_vertical = 4
-text = "Option C"
+text = "Difficulty Scaling"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 script = ExtResource( 5 )
 _sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
 
-[node name="Option D" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="Variation Staggering" type="Label" parent="GUI/Content Generator UI/Panel" index="5"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -198,18 +192,17 @@ margin_top = 40.0
 margin_right = 128.0
 margin_bottom = 48.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 1
 size_flags_horizontal = 1
 size_flags_vertical = 4
-text = "Option D"
+text = "Variation Staggering"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 script = ExtResource( 5 )
 _sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
 
-[node name="Option E" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="Cosmetic Generation" type="Label" parent="GUI/Content Generator UI/Panel" index="6"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -219,18 +212,17 @@ margin_top = 48.0
 margin_right = 128.0
 margin_bottom = 56.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 1
 size_flags_horizontal = 1
 size_flags_vertical = 4
-text = "Option E"
+text = "Cosmetic Generation"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 script = ExtResource( 5 )
 _sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
 
-[node name="Option F" type="Label" parent="GUI/Content Generator UI/Panel"]
+[node name="Reset" type="Label" parent="GUI/Content Generator UI/Panel" index="7"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -240,15 +232,14 @@ margin_top = 56.0
 margin_right = 128.0
 margin_bottom = 64.0
 rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
 mouse_filter = 1
 size_flags_horizontal = 1
 size_flags_vertical = 4
-text = "Option F"
+text = "Reset"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-script = ExtResource( 5 )
-_sections_unfolded = [ "Mouse", "Rect", "Visibility" ]
+script = ExtResource( 6 )
+_sections_unfolded = [ "Visibility" ]
 
 

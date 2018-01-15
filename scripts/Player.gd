@@ -2,15 +2,21 @@ extends RigidBody2D
 
 # constants
 const info = preload("res://scripts/Player Info.gd");
+const spikes = preload("res://scripts/Spikes.gd");
 
 # nodes
 var camera;
 var ground_checker;
+var left_safety_checker;
+var right_safety_checker;
 var sprite;
+var ground_platform = null;
 
 # move info
 var h_speed = 0.0;
 var is_on_ground = false;
+var safe_position = Vector2(0.0, 0.0);
+var last_ground_pos = Vector2(0.0, 0.0);
 
 # animation info
 var animation_timer = 0.0;
@@ -33,10 +39,29 @@ func process_on_ground():
 	is_on_ground = false;
 	for body in ground_checker.get_overlapping_bodies():
 		
-		if body != self:
+		if body is spikes:
+			
+			if body.position.y > position.y:
+				
+				kill();
+			return;
+		elif body != self:
 			
 			is_on_ground = true;
-			return;
+			if ground_platform == body:
+				
+				#position += ground_platform.position - last_ground_pos;
+				last_ground_pos = ground_platform.position;
+			elif ground_platform == null:
+				
+				ground_platform = body;
+			last_ground_pos = body.position;
+			if left_safety_checker.overlaps_body(body) && right_safety_checker.overlaps_body(body):
+				
+				safe_position = position;
+	if !is_on_ground:
+		
+		ground_platform = null;
 	return;
 
 # process_movement
@@ -122,7 +147,8 @@ func process_animation(t_delta):
 # kill
 func kill():
 	
-	position = Vector2(16.0, -16.0);
+	print("am kill");
+	position = safe_position + Vector2(0.0, -16.0);
 	return;
 
 # _ready
@@ -130,6 +156,8 @@ func _ready():
 	
 	camera = get_node("Camera");
 	ground_checker = get_node("Ground Checker");
+	left_safety_checker = get_node("Left Safety Checker");
+	right_safety_checker = get_node("Right Safety Checker");
 	sprite = get_node("Sprite");
 	return;
 

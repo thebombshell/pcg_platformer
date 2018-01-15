@@ -2,8 +2,14 @@
 extends KinematicBody2D
 
 export(int, 1, 20) var h_size = 1 setget set_h_size;
+export(Vector2) var start_pos = Vector2(0.0, 0.0);
+export(Vector2) var end_pos = Vector2(0.0, 0.0);
+export(float, 8.0, 20.0) var move_speed = 8.0;
+
 var texture_res = preload("res://assets/textures/sprites.png");
 var sprite_list = [];
+var is_forward = false;
+var pos_alpha = 0.0;
 onready var is_ready = true;
 
 func set_h_size(t_h_size):
@@ -82,8 +88,38 @@ func update_size():
 	update_sprites();
 	return;
 
+# on_set_back
+func on_set_back(setback):
+	
+	start_pos.x -= setback;
+	end_pos.x -= setback;
+	return;
+
 # _ready
 func _ready():
 	
 	update_size();
-	pass;
+	return;
+
+# _physics_process
+func _physics_process(delta):
+	
+	var distance = start_pos.distance_to(end_pos);
+	if distance < 0.001:
+		position = start_pos;
+		return;
+	if is_forward:
+		
+		pos_alpha += (delta / distance) * move_speed;
+		if pos_alpha > 1.0:
+			
+			is_forward = false;
+	else:
+		
+		pos_alpha -= (delta / distance) * move_speed;
+		if pos_alpha < 0.0:
+			
+			is_forward = true;
+	position = start_pos * (1.0 - pos_alpha) + end_pos * pos_alpha;
+	
+	return;

@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://scripts/Platform.gd" type="Script" id=1]
+[ext_resource path="res://scripts/Spikes.gd" type="Script" id=1]
 
-[node name="Platform" type="KinematicBody2D"]
+[node name="Spikes" type="KinematicBody2D"]
 
 input_pickable = false
 collision_layer = 1
@@ -13,6 +13,7 @@ h_size = 1
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." index="0"]
 
+visible = false
 build_mode = 0
 polygon = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
 

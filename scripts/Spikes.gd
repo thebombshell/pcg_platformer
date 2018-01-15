@@ -54,21 +54,8 @@ func update_collision():
 func update_sprites():
 	
 	clear_sprites();
-	
-	if h_size == 1:
-		
-		create_sprite(Vector2(0.0, 0.0), Rect2(48.0, 16.0, 16.0, 16.0));
-	elif h_size == 2:
-		
-		create_sprite(Vector2(0.0, 0.0), Rect2(0.0, 16.0, 16.0, 16.0));
-		create_sprite(Vector2(16.0, 0.0), Rect2(32.0, 16.0, 16.0, 16.0));
-	elif h_size >= 3:
-		
-		create_sprite(Vector2(0.0, 0.0), Rect2(0.0, 16.0, 16.0, 16.0));
-		for i in range(h_size - 2):
-			
-			create_sprite(Vector2((i + 1) * 16.0, 0.0), Rect2(16.0, 16.0, 16.0, 16.0));
-		create_sprite(Vector2((h_size - 1) * 16.0, 0.0), Rect2(32.0, 16.0, 16.0, 16.0));
+	for i in range(h_size):
+		create_sprite(Vector2(i * 16.0, 0.0), Rect2(176.0, 16.0, 16.0, 16.0));
 	return;
 
 # update_size
