@@ -3,6 +3,7 @@ extends RigidBody2D
 # constants
 const info = preload("res://scripts/Player Info.gd");
 const spikes = preload("res://scripts/Spikes.gd");
+const platform = preload("res://scripts/Platform.gd");
 
 # nodes
 var camera;
@@ -48,15 +49,7 @@ func process_on_ground():
 		elif body != self:
 			
 			is_on_ground = true;
-			if ground_platform == body:
-				
-				#position += ground_platform.position - last_ground_pos;
-				last_ground_pos = ground_platform.position;
-			elif ground_platform == null:
-				
-				ground_platform = body;
-			last_ground_pos = body.position;
-			if left_safety_checker.overlaps_body(body) && right_safety_checker.overlaps_body(body):
+			if body is platform && left_safety_checker.overlaps_body(body) && right_safety_checker.overlaps_body(body):
 				
 				safe_position = position;
 	if !is_on_ground:

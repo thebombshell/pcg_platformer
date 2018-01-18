@@ -6,7 +6,7 @@ const bit_font = preload("res://scripts/Bit Font.gd");
 const sprite_tex = preload("res://assets/textures/sprites.png");
 const char_array_a = [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 46, 44, 33, 63, 95, 35 ];
 const char_array_b = [97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 32 ];
-
+const moving_platform = preload("res://scripts/moving platform.gd");
 # prefabs
 const platform_prefab = preload("res://objects/Platform.tscn");
 const moving_platform_prefab = preload("res://objects/Moving Platform.tscn");
@@ -24,6 +24,7 @@ var cosmetic_generation;
 var option_f;
 
 # generator info
+var last_platform = null;
 var end_position = Vector2(-640.0, 0.0);
 var minor_difficulty = 0.0;
 var major_difficulty = 0.0;
@@ -180,20 +181,20 @@ func generate_jump(t_min_alpha = 0.0, t_max_alpha = 1.0):
 # generate_horizontal_jump
 func generate_horizontal_jump():
 	
-	generate_jump(0.4, 1.0);
+	last_platform = generate_jump(0.4, 1.0);
 	return;
 
 # generate_vertical_jump
 func generate_vertical_jump():
 	
-	generate_jump(0.0, 0.4);
+	last_platform = generate_jump(0.0, 0.4);
 	return;
 
 # generate_drop
 func generate_drop():
 	
 	var target_length = find_target_length();
-	create_platform(end_position + Vector2(16.0, 32.0), target_length);
+	last_platform = create_platform(end_position + Vector2(16.0, 32.0), target_length);
 	end_position = end_position + Vector2(16.0 + target_length * 16.0, 32.0);
 	return;
 
@@ -212,30 +213,30 @@ func generate_moving_platform(t_min_alpha = 0.0, t_max_alpha = 1.0, t_max_horizo
 # generate_horizontal_moving_platform
 func generate_horizontal_moving_platform():
 	
-	generate_moving_platform(0.4, 1.0, 4, 0);
+	last_platform = generate_moving_platform(0.4, 1.0, 4, 0);
 	return;
 
 # generate_vertical_moving_platform
 func generate_vertical_moving_platform():
 	
-	generate_moving_platform(0.0, 0.4, 0, -4);
+	last_platform = generate_moving_platform(0.0, 0.4, 0, -4);
 	return;
 
 # generate_diagonal_moving_platform
 func generate_diagonal_moving_platform():
 	
-	generate_moving_platform(0.0, 1.0, 4, 4);
+	last_platform = generate_moving_platform(0.0, 1.0, 4, 4);
 	return;
 
 # generate_spikes
 func generate_spikes():
 	
-	var target_length = 4 + find_target_length();
-	create_platform(end_position + Vector2(16.0, 0.0), target_length);
-	if target_length > 4:
+	var target_length = 2 + find_target_length();
+	last_platform = create_platform(end_position + Vector2(16.0, 0.0), target_length);
+	if target_length > 3:
 		
-		var spike_length = find_spike_length(min(6, max(1, target_length - 2)));
-		create_spikes(end_position + Vector2(32.0, -16.0), spike_length);
+		var spike_length = find_spike_length(max(1, target_length - 2));
+		create_spikes(end_position + Vector2(target_length * 8.0 - spike_length * 8.0 + 16.0, -16.0), spike_length);
 		end_position = end_position + Vector2(target_length * 16.0, 0.0);
 	return;
 
@@ -248,7 +249,8 @@ func generate_spikes_jump():
 		var spike_length = find_spike_length(platform.h_size - 2);
 		if spike_length > 0:
 			
-			create_spikes(platform.position + Vector2(16.0, -16.0), spike_length);
+			create_spikes(platform.position + Vector2(-platform.h_size * 8.0 - spike_length * 8.0, 0.0), spike_length);
+	last_platform = platform;
 	return;
 
 # generate
@@ -256,16 +258,11 @@ func generate():
 	
 	if hazard_variation.is_enabled:
 		
-		var hazard = randf();
-		
-		var h_jump_ratio = 1.0;
-		var v_jump_ratio = 1.0;
-		var drop_ratio = 1.0;
-		var h_platform_ratio = 1.0;
-		var v_platform_ratio = 1.0;
-		var d_platform_ratio = 1.0;
+		var jump_ratio = 1.0;
+		var drop_ratio = 2.0;
+		var platform_ratio = 1.0;
 		var spike_ratio = 1.0;
-		var spike_jump_ratio = 1.0;
+		
 		if difficulty_scaling.is_enabled:
 			
 			minor_difficulty += 0.2;
@@ -276,63 +273,66 @@ func generate():
 			pass;
 		if variation_staggering.is_enabled:
 			
-			jump_chance += 0.05;
-			drop_chance += 0.05;
-			platform_chance += 0.05;
-			spike_chance += 0.05;
-			h_jump_ratio = jump_chance;
-			v_jump_ratio = jump_chance;
+			jump_chance = max(0.05, jump_chance + 0.05);
+			drop_chance = max(0.05, drop_chance + 0.05);
+			platform_chance = max(0.05, platform_chance + 0.05);
+			spike_chance = max(0.05, spike_chance + 0.05);
+			jump_ratio = jump_chance;
 			drop_ratio = drop_chance;
-			h_platform_ratio = platform_chance;
-			v_platform_ratio = platform_chance;
-			d_platform_ratio = platform_chance;
+			platform_ratio = platform_chance;
 			spike_ratio = spike_chance;
-			spike_jump_ratio = spike_chance;
 			pass;
-			
 		
-		var total_chance = h_jump_ratio + v_jump_ratio + drop_ratio + h_platform_ratio + v_platform_ratio + d_platform_ratio + spike_ratio + spike_jump_ratio;
-		h_jump_ratio = h_jump_ratio / total_chance;
-		v_jump_ratio = h_jump_ratio + v_jump_ratio / total_chance;
-		drop_ratio = v_jump_ratio + drop_ratio / total_chance;
-		h_platform_ratio = drop_ratio + h_platform_ratio / total_chance;
-		v_platform_ratio = h_platform_ratio + v_platform_ratio / total_chance;
-		d_platform_ratio = v_platform_ratio + d_platform_ratio / total_chance;
-		spike_ratio = d_platform_ratio + spike_ratio / total_chance;
-		spike_jump_ratio = spike_ratio + spike_jump_ratio / total_chance;
+		if last_platform is moving_platform:
+			
+			platform_ratio = 0.0;
 		
-		if hazard < h_jump_ratio:
+		var total_chance = jump_ratio + drop_ratio + platform_ratio + spike_ratio;
+		var hazard = randf() * total_chance;
+		jump_ratio = jump_ratio;
+		drop_ratio = jump_ratio + drop_ratio;
+		platform_ratio = drop_ratio + platform_ratio;
+		spike_ratio = platform_ratio + spike_ratio;
+		
+		print("hazard value: { " + str(hazard) + " } spike requirement: { " + str(platform_ratio) + " }" );
+		
+		if hazard < jump_ratio:
 			
-			generate_horizontal_jump();
-			jump_chance -= 0.1;
-		elif hazard < v_jump_ratio:
-			
-			generate_vertical_jump();
-			jump_chance -= 0.1;
+			hazard = randf();
+			jump_chance -= 0.2;
+			if hazard < 0.5:
+				
+				generate_horizontal_jump();
+			else:
+				
+				generate_vertical_jump();
 		elif hazard < drop_ratio:
 			
 			generate_drop();
-			drop_chance -= 0.1;
-		elif hazard < h_platform_ratio:
+			drop_chance -= 0.2;
+		elif hazard < platform_ratio:
 			
-			generate_horizontal_moving_platform();
-			platform_chance -= 0.1;
-		elif hazard < v_platform_ratio:
+			hazard = randf();
+			platform_chance -= 0.2;
+			if hazard < 0.333:
+				
+				generate_horizontal_moving_platform();
+			elif hazard <= 0.666:
+				
+				generate_vertical_moving_platform();
+			else:
+				
+				generate_diagonal_moving_platform();
+		else:
 			
-			generate_vertical_moving_platform();
-			platform_chance -= 0.1;
-		elif hazard < d_platform_ratio:
-			
-			generate_diagonal_moving_platform();
-			platform_chance -= 0.1;
-		elif hazard < spike_ratio:
-			
-			generate_spikes();
-			spike_chance -= 0.1;
-		elif hazard < spike_jump_ratio:
-			
-			generate_spikes_jump();
-			spike_chance -= 0.1;
+			hazard = randf();
+			spike_chance -= 0.2;
+			if hazard < 0.5:
+				
+				generate_spikes();
+			else:
+				
+				generate_spikes_jump();
 		return;
 	
 	generate_jump();
@@ -372,11 +372,10 @@ func _ready():
 	hazard_variation = ui.get_node("Panel/Hazard Variation");
 	difficulty_scaling = ui.get_node("Panel/Difficulty Scaling");
 	variation_staggering = ui.get_node("Panel/Variation Staggering");
-	cosmetic_generation = ui.get_node("Panel/Cosmetic Generation");
 	ui.theme.default_font.add_texture(sprite_tex);
 	bit_font.add_characters(ui.theme.default_font, Vector2(0.0, 240.0), Vector2(8.0, 8.0), char_array_a);
 	bit_font.add_characters(ui.theme.default_font, Vector2(0.0, 248.0), Vector2(8.0, 8.0), char_array_b);
-	create_platform(Vector2(0.0, 0.0), 4);
+	last_platform = create_platform(Vector2(0.0, 0.0), 4);
 	set_physics_process(true);
 	end_position = Vector2(48.0, 0.0);
 	return;
@@ -393,5 +392,5 @@ func _physics_process(t_delta):
 # reset
 func reset():
 	
-	
+	print("reset");
 	return;
