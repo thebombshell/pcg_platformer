@@ -6,7 +6,7 @@ const bit_font = preload("res://scripts/Bit Font.gd");
 const sprite_tex = preload("res://assets/textures/sprites.png");
 const char_array_a = [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 46, 44, 33, 63, 95, 35 ];
 const char_array_b = [97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 32 ];
-const moving_platform = preload("res://scripts/moving platform.gd");
+const moving_platform = preload("res://scripts/Moving Platform.gd");
 # prefabs
 const platform_prefab = preload("res://objects/Platform.tscn");
 const moving_platform_prefab = preload("res://objects/Moving Platform.tscn");
@@ -103,7 +103,7 @@ func get_level_length():
 # find_target_length
 func find_target_length():
 	
-	var size = 4;
+	var size = 8;
 	if random_variation.is_enabled:
 		
 		size = (randi() % 8) + 1;
@@ -135,7 +135,7 @@ func find_target_position(t_alpha):
 # find_jump_alpha
 func find_jump_alpha(t_min = 0.0, t_max = 1.0):
 	
-	var jump_alpha = t_max;
+	var jump_alpha = t_min;
 	if random_variation.is_enabled:
 		
 		var alpha = randf();
@@ -168,10 +168,7 @@ func find_platform_speed():
 # generate_jump
 func generate_jump(t_min_alpha = 0.0, t_max_alpha = 1.0):
 	
-	var jump_alpha = 1.0;
-	if random_variation.is_enabled:
-		
-		jump_alpha = find_jump_alpha(t_min_alpha, t_max_alpha);
+	var jump_alpha = find_jump_alpha(t_min_alpha, t_max_alpha);
 	var target_position = find_target_position(jump_alpha);
 	var target_length = find_target_length();
 	var platform = create_platform(target_position, target_length);
@@ -226,6 +223,7 @@ func generate_vertical_moving_platform():
 func generate_diagonal_moving_platform():
 	
 	last_platform = generate_moving_platform(0.0, 1.0, 4, 4);
+	print(last_platform is moving_platform);
 	return;
 
 # generate_spikes
@@ -294,8 +292,6 @@ func generate():
 		platform_ratio = drop_ratio + platform_ratio;
 		spike_ratio = platform_ratio + spike_ratio;
 		
-		print("hazard value: { " + str(hazard) + " } spike requirement: { " + str(platform_ratio) + " }" );
-		
 		if hazard < jump_ratio:
 			
 			hazard = randf();
@@ -341,26 +337,19 @@ func generate():
 # process_generator
 func process_generator():
 	
-	if player.position.x + get_level_length() > end_position.x:
+	if player.position.x + get_level_length()  > end_position.x:
 		
 		generate();
 	return;
 
-# set_back_level
-func set_back_level():
+# clean_level
+func clean_level():
 	
-	player.position.x -= get_level_length();
-	end_position.x -= get_level_length();
 	for node in get_children():
 		
-		if node.position.x < 0.0:
+		if node.position.x < player.position.x - get_level_length():
 			
 			node.queue_free();
-		if node.has_method("on_set_back"):
-			
-			node.on_set_back(get_level_length());
-		node.position.x -= get_level_length();
-	
 	return;
 
 # _ready
@@ -375,18 +364,18 @@ func _ready():
 	ui.theme.default_font.add_texture(sprite_tex);
 	bit_font.add_characters(ui.theme.default_font, Vector2(0.0, 240.0), Vector2(8.0, 8.0), char_array_a);
 	bit_font.add_characters(ui.theme.default_font, Vector2(0.0, 248.0), Vector2(8.0, 8.0), char_array_b);
-	last_platform = create_platform(Vector2(0.0, 0.0), 4);
+	last_platform = create_platform(Vector2(0.0, 0.0), 20);
 	set_physics_process(true);
-	end_position = Vector2(48.0, 0.0);
+	end_position = Vector2(320.0, 0.0);
 	return;
 
 # _process
 func _physics_process(t_delta):
 	
-	if player.position.x > get_level_length():
+	if player.position.x + get_level_length() > end_position.x:
 		
-		set_back_level();
-	process_generator();
+		clean_level();
+		generate();
 	return;
 
 # reset

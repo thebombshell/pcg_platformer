@@ -159,7 +159,7 @@ func _process(t_delta):
 	
 	process_animation(t_delta);
 	camera.align();
-	if position.y > info.get_death_height():
+	if position.y > safe_position.y + 480.0:
 		
 		kill();
 	return;
